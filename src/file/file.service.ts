@@ -1,6 +1,10 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+	BadRequestException,
+	Injectable,
+	NotFoundException,
+} from '@nestjs/common'
 import { IFile } from './file.interface'
-import { ensureDir, outputFile, pathExists } from 'fs-extra'
+import { ensureDir, outputFile, pathExists, remove } from 'fs-extra'
 @Injectable()
 export class FileService {
 	async saveFile(
@@ -42,5 +46,20 @@ export class FileService {
 		)
 
 		return result
+	}
+
+	deleteFile(path: string) {
+		if (pathExists(path)) {
+			console.log('qweqweqwe')
+			remove(path, (err) => {
+				if (err) throw new NotFoundException(err)
+				return {
+					success: true,
+					message: 'file been removed',
+				}
+			})
+		} else {
+			throw new NotFoundException('file not found')
+		}
 	}
 }

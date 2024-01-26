@@ -28,7 +28,7 @@ export class AuthService {
 		const tokens = this.issueTokenPair(newUser._id.toString())
 
 		return {
-			user: Helper.removePasswordFromUser(newUser),
+			...Helper.removePasswordFromUser(newUser),
 			...tokens,
 		}
 	}
@@ -45,7 +45,7 @@ export class AuthService {
 		const generateNewToken = this.issueTokenPair(searchUser._id.toString())
 
 		return {
-			user: Helper.removePasswordFromUser(searchUser),
+			...Helper.removePasswordFromUser(searchUser),
 			...generateNewToken,
 		}
 	}
@@ -61,8 +61,7 @@ export class AuthService {
 	}
 
 	async getNewTokens({ refreshToken }: RefreshTokenDto) {
-		console.log(refreshToken)
-
+ 
 		if (!refreshToken) throw new UnauthorizedException('Please sign in')
 
 		const result = await this.jwtService.verifyAsync(refreshToken)
@@ -73,7 +72,7 @@ export class AuthService {
 		const generateNewToken = this.issueTokenPair(user._id.toString())
 
 		return {
-			user: Helper.removePasswordFromUser(user),
+			...Helper.removePasswordFromUser(user),
 			...generateNewToken,
 		}
 	}

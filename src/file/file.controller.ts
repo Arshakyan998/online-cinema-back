@@ -4,6 +4,8 @@ import {
 	UseInterceptors,
 	UploadedFile,
 	Query,
+	Delete,
+	Param,
 } from '@nestjs/common'
 import { FileService } from './file.service'
 import { FileInterceptor } from '@nestjs/platform-express'
@@ -20,10 +22,15 @@ export class FileController {
 		@UploadedFile() file: Express.Multer.File,
 		@Query('folder') folder?: string,
 	) {
-		console.log('folder')
-
 		const rootPath = `${path}/uploads`
 
 		return this.fileService.saveFile([file], rootPath, folder)
+	}
+
+	@Auth('admin')
+	@Delete()
+ 	deleteFile(@Query('path') path: string) {
+		console.log(path)
+		return this.fileService.deleteFile(path)
 	}
 }

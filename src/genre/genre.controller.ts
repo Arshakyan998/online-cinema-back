@@ -8,6 +8,7 @@ import {
 	Delete,
 	ValidationPipe,
 	UsePipes,
+	Put,
 } from '@nestjs/common'
 import { GenreService } from './genre.service'
 import { Auth } from 'src/auth/decorators/auth.decorator'
@@ -19,16 +20,18 @@ import { idValidationPipe } from 'src/pipes/id.validation.pipe'
 export class GenreController {
 	constructor(private readonly genreService: GenreService) {}
 
-	@Post()
+	@Get()
 	@HttpCode(200)
-	getAll(@Body('search') searchParam?: string) {
+	getAll(@Param('search') searchParam?: string) {
 		return this.genreService.getAll(searchParam)
 	}
 
-	@Post('update')
+	@Put(':id')
 	@HttpCode(201)
 	@Auth('admin')
-	update(@User('_id') id: string, @Body() dto: CreateGenreDto) {
+	update(@Param('id') id: string, @Body() dto: CreateGenreDto) {
+
+ 
 		return this.genreService.update(id, dto)
 	}
 
@@ -48,5 +51,10 @@ export class GenreController {
 	@Get('by-slug/:slug')
 	getBySlug(@Param('slug') slug: string) {
 		return this.genreService.getBySlug(slug)
+	}
+
+	@Get(':id')
+	getById(@Param('id') id: string) {
+		return this.genreService.getById(id)
 	}
 }

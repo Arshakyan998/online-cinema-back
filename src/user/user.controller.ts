@@ -9,6 +9,7 @@ import {
 	Param,
 	Delete,
 	Post,
+	Query,
 } from '@nestjs/common'
 import { UserService } from './user.service'
 import { Auth } from 'src/auth/decorators/auth.decorator'
@@ -51,8 +52,8 @@ export class UserController {
 
 	@Get()
 	@Auth('BOSS')
-	async getAllUsers(@Body('email') email?: string) {
-		return this.userService.getAll(email)
+	async getAllUsers(@Query('email') email?: string) {
+ 		return this.userService.getAll(email)
 	}
 
 	@Delete(':id')
@@ -71,5 +72,11 @@ export class UserController {
 	@Auth()
 	async getFavorite(@User('id') id: Types.ObjectId) {
 		return this.userService.getFavorites(id)
+	}
+
+	@Get('/count')
+	@Auth('admin')
+	getUserCount() {
+		return this.userService.getUserCount()
 	}
 }

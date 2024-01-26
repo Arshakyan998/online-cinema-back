@@ -9,6 +9,7 @@ import {
 	ValidationPipe,
 	HttpCode,
 	Query,
+	Put,
 } from '@nestjs/common'
 import { ActorService } from './actor.service'
 import { Auth } from 'src/auth/decorators/auth.decorator'
@@ -21,15 +22,22 @@ export class ActorController {
 	constructor(private readonly actorService: ActorService) {}
 	@Get()
 	@HttpCode(200)
-	getAll(@Query('search') searchParam?: string) {
+	getAll(@Query('searchTerm') searchParam?: string) {
 		return this.actorService.getAll(searchParam)
 	}
 
-	@Post('update')
+	@Put(':id')
 	@HttpCode(201)
 	@Auth('admin')
-	update(@User('_id') id: string, @Body() dto: ActorDto) {
+	update(@Param('id') id: string, @Body() dto: ActorDto) {
 		return this.actorService.update(id, dto)
+	}
+
+	@Get(':id')
+	@HttpCode(201)
+	@Auth('admin')
+	getById(@Param('id') id: string) {
+		return this.actorService.getActorById(id)
 	}
 
 	@Delete(':id')

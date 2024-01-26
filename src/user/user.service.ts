@@ -69,7 +69,7 @@ export class UserService {
 	async deleteUser(id: string) {
 		const user = await this.UserModel.findByIdAndDelete(id)
 
-		if (!user) throw new BadGatewayException('User Alrady Deleted')
+		if (!user) throw new BadGatewayException('User Already Deleted')
 
 		return {
 			success: true,
@@ -95,5 +95,10 @@ export class UserService {
 		})
 
 		return data.toObject().favorites
+	}
+
+	async getUserCount() {
+		const count = await this.UserModel.countDocuments()
+		return count
 	}
 }

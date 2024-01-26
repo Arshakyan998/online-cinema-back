@@ -97,4 +97,12 @@ export class GenreService {
 
 		return getBySlag
 	}
+
+	async getById(id: string) {
+		const getDataById = await this.genreModel.findById(id)
+
+		if (!getDataById) throw new NotFoundException('chka')
+
+		return getDataById
+	}
 }

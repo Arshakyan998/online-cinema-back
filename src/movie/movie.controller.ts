@@ -9,6 +9,7 @@ import {
 	UsePipes,
 	ValidationPipe,
 	Put,
+	Query,
 } from '@nestjs/common'
 import { MovieService } from './movie.service'
 import { idValidationPipe } from 'src/pipes/id.validation.pipe'
@@ -20,13 +21,14 @@ import { SlagDto } from './slag.dto'
 @Controller('movie')
 export class MovieController {
 	constructor(private readonly movieService: MovieService) {}
+
 	@Get()
 	@HttpCode(200)
-	getAll(@Body('search') searchParam?: string) {
+	getAll(@Query('searchTerm') searchParam?: string) {
 		return this.movieService.getAll(searchParam)
 	}
 
-	@Put('update/:id')
+	@Put(':id')
 	@HttpCode(201)
 	@UsePipes(
 		new ValidationPipe({
@@ -39,7 +41,25 @@ export class MovieController {
 		@Param('id', idValidationPipe) id: string,
 		@Body() dto: Partial<CreateMovieDto>,
 	) {
-		return this.movieService.update(id, dto)
+ 		return this.movieService.update(id, dto)
+	}
+
+	@Get('most-popular')
+	getMostPopularFilms() {
+		return this.movieService.getMostPopular()
+	}
+
+	@Get(':id')
+	@HttpCode(201)
+	@UsePipes(
+		new ValidationPipe({
+			always: true,
+			errorHttpStatusCode: 400,
+		}),
+	)
+	@Auth('admin')
+	getById(@Param('id', idValidationPipe) id: string) {
+		return this.movieService.getById(id)
 	}
 
 	@Put('update-count-opened')
@@ -76,10 +96,5 @@ export class MovieController {
 	@Post('by-genres')
 	getByGenres(@Body('ids') genreId: Types.ObjectId[]) {
 		return this.movieService.getByGenres(genreId)
-	}
-
-	@Get('most-popular')
-	getMostPopularFilms() {
-		return this.movieService.getMostPopular()
 	}
 }

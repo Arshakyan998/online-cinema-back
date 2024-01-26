@@ -96,4 +96,12 @@ export class ActorService {
 
 		return getBySlag
 	}
+
+	async getActorById(id:string){
+		const getById=await this.actorModel.findById(id)
+
+		if(!getById) throw new NotFoundException('actor not found')
+		return getById
+	}
+
 }

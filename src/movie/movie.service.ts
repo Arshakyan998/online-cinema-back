@@ -58,10 +58,9 @@ export class MovieService {
 	async update(id: string, dto: Partial<CreateMovieDto>) {
 		/*Telegra notification*/
 
-		await this.sendNotification(dto as CreateMovieDto)
+		//await this.sendNotification(dto as CreateMovieDto)
 
 		// if (typeof dto.parameters[string] !== typeof Parameters) {
-		//     console.log('qeweqqweq')
 
 		//     throw new BadRequestException('Wrong parameters')
 		// }
@@ -100,6 +99,7 @@ export class MovieService {
 
 		return getBySlag
 	}
+
 	async getByActor(actorsId: string) {
 		const getByActor = await this.movieModel.findById(actorsId)
 
@@ -161,5 +161,13 @@ export class MovieService {
 				],
 			},
 		})
+	}
+
+	async getById(id: string) {
+		const getMovie = await this.movieModel.findById(id)
+
+		if (!getMovie) return new NotFoundException('Move not found')
+
+		return getMovie
 	}
 }
